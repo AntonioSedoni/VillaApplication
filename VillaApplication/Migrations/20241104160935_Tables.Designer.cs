@@ -12,7 +12,7 @@ using VillaApplication.Service;
 namespace VillaApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241030162922_Tables")]
+    [Migration("20241104160935_Tables")]
     partial class Tables
     {
         /// <inheritdoc />
