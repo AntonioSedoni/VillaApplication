@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using VillaApplication.Configuration;
 using VillaApplication.Mapper.Base;
 using VillaApplication.Model.Base;
 

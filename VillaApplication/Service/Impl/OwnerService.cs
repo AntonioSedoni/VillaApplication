@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using VillaApplication.Configuration;
 using VillaApplication.Mapper;
 using VillaApplication.Model.Bo;
 using VillaApplication.Model.Data;

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VillaApplication.Model.Data;
 
-namespace VillaApplication.Configuration
+namespace VillaApplication.Service
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : DbContext(options)
     {
         public DbSet<Villa> Villas { get; set; }

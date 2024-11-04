@@ -1,7 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using VillaApplication.Configuration;
 using VillaApplication.Service;
 using VillaApplication.Service.Impl;
 
