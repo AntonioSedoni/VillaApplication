@@ -31,7 +31,7 @@ namespace VillaApplication.Service.Impl
 
             Villa e = Save(bo);
 
-            logger.LogInformation("Created new Villa with id: {}.", e.Id);
+            logger.LogInformation("Created new Villa with id: {Id}.", e.Id);
 
             return new VillaDTO() { Name = bo.Name, Id = e.Id, OwnerId = e.OwnerId };
         }
@@ -65,7 +65,7 @@ namespace VillaApplication.Service.Impl
 
             if (villa == null)
             {
-                logger.LogError("Error to delete Villa with id: {}.", id);
+                logger.LogError("Error to delete Villa with id: {Id}.", id);
                 return false;
             }
 
@@ -73,11 +73,11 @@ namespace VillaApplication.Service.Impl
 
             if (isDeleted)
             {
-                logger.LogInformation("The entity with id: {} is deleted.", id);
+                logger.LogInformation("The entity with id: {Id} is deleted.", id);
             }
             else
             {
-                logger.LogInformation("the entity with id: {} didn't delete.", id);
+                logger.LogInformation("the entity with id: {Id} didn't delete.", id);
             }
 
             return isDeleted;
@@ -105,7 +105,7 @@ namespace VillaApplication.Service.Impl
             Villa entity = repository.Update(villa).Entity;
             Save();
 
-            logger.LogInformation("Updated entity with id: {}.", id);
+            logger.LogInformation("Updated entity with id: {Id}.", id);
 
             return new VillaDTO() { Id = entity.Id, Name = entity.Name };
         }

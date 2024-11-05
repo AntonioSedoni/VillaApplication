@@ -20,7 +20,7 @@ namespace VillaApplication.Service.Impl
 
             Owner e = Save(bo);
 
-            logger.LogInformation("Created new Owner with id: {}.", e.Id);
+            logger.LogInformation("Created new Owner with id: {Id}.", e.Id);
 
             return new OwnerDTO() { FristName = bo.FristName, LastName = e.LastName, Id = e.Id };
         }
