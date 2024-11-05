@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using VillaApplication.Database;
 using VillaApplication.Mapper;
 using VillaApplication.Model.Bo;
 using VillaApplication.Model.Data;
@@ -7,10 +8,16 @@ using VillaApplication.Model.Dto;
 namespace VillaApplication.Service.Impl
 {
     public class VillaService(ApplicationDbContext _applicationDbContext, ILogger<VillaService> _logger, IOwnerService _ownerService) :
-        AbstractService<Villa, VillaDTO, VillaBO, VillaMapperEToBO, VillaMapperEToDTO>(_applicationDbContext, _logger, _applicationDbContext.Villas),
+        AbstractService<Villa, VillaDTO, VillaBO, VillaMapperEToBO, VillaMapperEToDTO>(_applicationDbContext, _logger),
         IVillaService
     {
         private readonly IOwnerService OwnerService = _ownerService;
+
+        protected override string GetClass()
+        {
+            return typeof(Villa).Name;
+        }
+
 
         public VillaDTO? AddVilla(VillaBO bo)
         {
@@ -20,8 +27,6 @@ namespace VillaApplication.Service.Impl
                 return null;
             }
 
-            DateTime now = DateTime.Now;
-
             Owner? owner = OwnerService.GetEntityById(bo.OwnerId);
 
             if (owner == null)
@@ -29,11 +34,11 @@ namespace VillaApplication.Service.Impl
                 return null;
             }
 
-            Villa e = Save(bo);
+            VillaDTO dto = Save(bo);
 
-            logger.LogInformation("Created new Villa with id: {Id}.", e.Id);
+            logger.LogInformation("Created new Villa with id: {Id}.", dto.Id);
 
-            return new VillaDTO() { Name = bo.Name, Id = e.Id, OwnerId = e.OwnerId };
+            return dto;
         }
 
         public new VillaDTO? GetById(int id)
@@ -54,7 +59,7 @@ namespace VillaApplication.Service.Impl
         {
             logger.LogInformation("Get all Villas.");
 
-            List<Villa> villas = repository.ToList();
+            List<Villa> villas = db.Villas.ToList();
 
             return mapperEToDTO.MapEToEX(villas);
         }
@@ -85,29 +90,9 @@ namespace VillaApplication.Service.Impl
 
         public VillaDTO? Edit(int id, VillaBO bo)
         {
-            Villa? villa = base.GetById(id);
+            Villa? villa = Update(id, bo);
 
-            if (villa == null)
-            {
-                return null;
-            }
-
-            if (bo == null)
-            {
-                return null;
-            }
-
-
-            villa.Name = bo.Name;
-            villa.OwnerId = bo.OwnerId;
-            villa.EditedDate = DateTime.Now;
-
-            Villa entity = repository.Update(villa).Entity;
-            Save();
-
-            logger.LogInformation("Updated entity with id: {Id}.", id);
-
-            return new VillaDTO() { Id = entity.Id, Name = entity.Name };
+            return villa != null ? mapperEToDTO.MapEToEX(villa) : null;
         }
     }
 }

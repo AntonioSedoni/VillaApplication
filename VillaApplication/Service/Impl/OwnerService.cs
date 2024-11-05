@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using VillaApplication.Database;
 using VillaApplication.Mapper;
 using VillaApplication.Model.Bo;
 using VillaApplication.Model.Data;
@@ -7,9 +8,14 @@ using VillaApplication.Model.Dto;
 namespace VillaApplication.Service.Impl
 {
     public class OwnerService(ApplicationDbContext _applicationDbContext, ILogger<OwnerService> _logger) :
-        AbstractService<Owner, OwnerDTO, OwnerBO, OwnerMapperEToBO, OwnerMapperEToDTO>(_applicationDbContext, _logger, _applicationDbContext.Owners),
+        AbstractService<Owner, OwnerDTO, OwnerBO, OwnerMapperEToBO, OwnerMapperEToDTO>(_applicationDbContext, _logger),
         IOwnerService
     {
+        protected override string GetClass()
+        {
+            return typeof(Owner).Name;
+        }
+
         public OwnerDTO? AddOwner(OwnerBO bo)
         {
             if (bo == null)
@@ -18,11 +24,11 @@ namespace VillaApplication.Service.Impl
                 return null;
             }
 
-            Owner e = Save(bo);
+            OwnerDTO dto = Save(bo);
 
-            logger.LogInformation("Created new Owner with id: {Id}.", e.Id);
+            logger.LogInformation("Created new Owner with id: {Id}.", dto.Id);
 
-            return new OwnerDTO() { FristName = bo.FristName, LastName = e.LastName, Id = e.Id };
+            return dto;
         }
 
         public bool Delete(int id)

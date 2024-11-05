@@ -1,12 +1,14 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using VillaApplication.Database;
 using VillaApplication.Mapper.Base;
 using VillaApplication.Model.Base;
+using VillaApplication.Model.Data;
 
 namespace VillaApplication.Service
 {
-    public abstract class AbstractService<E, DTO, BO, MBO, MDTO>(ApplicationDbContext _applicationDbContext, ILogger _logger, DbSet<E> _repository)
+    public abstract class AbstractService<E, DTO, BO, MBO, MDTO>(ApplicationDbContext _applicationDbContext, ILogger _logger)
         where E : Entity 
         where DTO : EntityDTO 
         where BO : EntityBO
@@ -15,21 +17,12 @@ namespace VillaApplication.Service
     {
         protected readonly ILogger logger = _logger;
         protected readonly ApplicationDbContext db = _applicationDbContext;
-        public required DbSet<E> repository = _repository;
         protected readonly BaseMapperEToBO<E, BO> mapperEToBO = new MBO();
         protected readonly BaseMapperEtoDTO<E, DTO> mapperEToDTO = new MDTO();
 
-        protected string GetClass()
-        {
-           return  repository.EntityType.ClrType.Name;
-        }
+        protected abstract string GetClass();
 
-        protected void Save()
-        {
-            db.SaveChanges();
-        }
-
-        protected E Save(BO bo)
+        protected DTO Save(BO bo)
         {
             DateTime now = DateTime.Now;
 
@@ -39,16 +32,49 @@ namespace VillaApplication.Service
             return Save(mapperEToBO.MapEXToE(bo));    
         }
 
-        protected E Save(E entity) 
+        protected DTO Save(E entity) 
         {
-            EntityEntry<E> entityEntry = repository.Add(entity);
-            Save();
-            return entityEntry.Entity;
+            EntityEntry<E> entityEntry = db.Add<E>(entity);
+            db.SaveChanges();
+
+            return mapperEToDTO.MapEToEX(entityEntry.Entity);
+        }
+
+        protected E? Update(int id, BO bo)
+        {
+            logger.LogInformation("Updated entity: {Entity} with id: {Id}.", GetClass(), id);
+
+            E? entity = GetById(id);
+
+            if (entity == null)
+            {
+                logger.LogError("Entity: {Entity} with id: {Id} not found.", GetClass(), id);
+
+                return null;
+            }
+
+            if (bo == null)
+            {
+                logger.LogError("The request entity is null.");
+
+                return null;
+            }
+
+            E entityToUpdate = mapperEToBO.MapEXToE(bo);
+            entityToUpdate.Id = id;
+            entityToUpdate.EditedDate = DateTime.UtcNow;
+
+            E entityUpdated = db.Update<E>(entityToUpdate).Entity;
+            db.SaveChanges();
+
+            logger.LogInformation("Updated entity: {Entity} with id: {Id}.", GetClass(), id);
+
+            return entityUpdated;
         }
 
         protected E? GetById(int id)
         {
-            E? e = repository.Find(id);
+            E? e = db.Find<E>(id);
 
             logger.LogInformation("Get entity {EntityType} with id: {Id}", GetClass(), id);
 
@@ -68,8 +94,8 @@ namespace VillaApplication.Service
         {
             logger.LogInformation("Delete entity {EntityType} with id: {Id}", entity.GetType().Name, entity.Id);
 
-            E entityEntry = repository.Remove(entity).Entity;
-            Save();
+            E entityEntry = db.Remove<E>(entity).Entity;
+            db.SaveChanges();
 
             logger.LogInformation("Deleted entity {EntityType} with id: {Id}", entity.GetType().Name, entity.Id);
 
