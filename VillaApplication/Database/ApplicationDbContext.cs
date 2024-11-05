@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VillaApplication.Model.Data;
 
-namespace VillaApplication.Service
+namespace VillaApplication.Database
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : DbContext(options)

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using VillaApplication.Database;
 using VillaApplication.Service;
 using VillaApplication.Service.Impl;
 

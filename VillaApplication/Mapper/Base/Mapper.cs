@@ -22,14 +22,7 @@ namespace VillaApplication.Mapper.Base
 
         public List<E> MapEXToE(List<EX> bos)
         {
-            List<E> entities = new();
-
-            foreach (EX bo in bos)
-            {
-                entities.Add(MapEXToE(bo));
-            }
-
-            return entities;
+            return mapper.Map<List<E>>(bos);
         }
 
         public EX MapEToEX(E e)
@@ -39,14 +32,7 @@ namespace VillaApplication.Mapper.Base
 
         public List<EX> MapEToEX(List<E> entities)
         {
-            List<EX> bos = new();
-
-            foreach (E entity in entities)
-            {
-                bos.Add(MapEToEX(entity));
-            }
-
-            return bos;
+            return mapper.Map<List<EX>>(entities);
         }
     }
 }
