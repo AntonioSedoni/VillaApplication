@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
 using VillaApplication.Service;
 using VillaApplication.Service.Impl;
 
@@ -12,8 +13,13 @@ namespace VillaApplication
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add Serializer logs
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("logs/log-.txt", rollingInterval:RollingInterval.Day).CreateLogger();
+            // Add Serializer log
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             builder.Host.UseSerilog();
 
             //Add SQL Server
@@ -42,6 +48,8 @@ namespace VillaApplication
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
