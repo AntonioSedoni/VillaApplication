@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VillaApplication.Database;
 
-
 #nullable disable
 
 namespace VillaApplication.Migrations
@@ -37,7 +36,7 @@ namespace VillaApplication.Migrations
                     b.Property<DateTime>("EditedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FristName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using VillaApplication.Model.Base;
+﻿using VillaApplication.Model.Base;
 
 namespace VillaApplication.Model.Bo
 {
     public class OwnerBO : EntityBO
     {
-        [Required]
-        public string FristName { get; set; }
-        [Required]
+        public string FirstName { get; set; }
+
         public string LastName { get; set; }
     }
 }

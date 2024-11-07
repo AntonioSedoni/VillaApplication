@@ -1,10 +1,7 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VillaApplication.Database;
 using VillaApplication.Mapper.Base;
 using VillaApplication.Model.Base;
-using VillaApplication.Model.Data;
 
 namespace VillaApplication.Service
 {
@@ -29,7 +26,7 @@ namespace VillaApplication.Service
             bo.CreatedDate = now;
             bo.EditedDate = now;
 
-            return Save(mapperEToBO.MapEXToE(bo));    
+            return Save(mapperEToBO.MapBOToE(bo));    
         }
 
         protected DTO Save(E entity) 
@@ -37,7 +34,7 @@ namespace VillaApplication.Service
             EntityEntry<E> entityEntry = db.Add<E>(entity);
             db.SaveChanges();
 
-            return mapperEToDTO.MapEToEX(entityEntry.Entity);
+            return mapperEToDTO.MapEToDTO(entityEntry.Entity);
         }
 
         protected E? Update(int id, BO bo)
@@ -60,7 +57,7 @@ namespace VillaApplication.Service
                 return null;
             }
 
-            E entityToUpdate = mapperEToBO.MapEXToE(bo);
+            E entityToUpdate = mapperEToBO.MapBOToE(bo);
             entityToUpdate.Id = id;
             entityToUpdate.EditedDate = DateTime.UtcNow;
 

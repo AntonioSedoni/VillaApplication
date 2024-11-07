@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using VillaApplication.Model.Base;
+﻿using VillaApplication.Model.Base;
 
 namespace VillaApplication.Model.Data
 {

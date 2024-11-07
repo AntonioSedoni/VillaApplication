@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using VillaApplication.Database;
+﻿using VillaApplication.Database;
 using VillaApplication.Mapper;
 using VillaApplication.Model.Bo;
 using VillaApplication.Model.Data;
@@ -51,7 +50,7 @@ namespace VillaApplication.Service.Impl
             }
             else
             {
-                return mapperEToDTO.MapEToEX(e);
+                return mapperEToDTO.MapEToDTO(e);
             }
         }
 
@@ -61,7 +60,7 @@ namespace VillaApplication.Service.Impl
 
             List<Villa> villas = db.Villas.ToList();
 
-            return mapperEToDTO.MapEToEX(villas);
+            return mapperEToDTO.MapEToDTO(villas);
         }
 
         public bool Delete(int id)
@@ -92,7 +91,7 @@ namespace VillaApplication.Service.Impl
         {
             Villa? villa = Update(id, bo);
 
-            return villa != null ? mapperEToDTO.MapEToEX(villa) : null;
+            return villa != null ? mapperEToDTO.MapEToDTO(villa) : null;
         }
     }
 }

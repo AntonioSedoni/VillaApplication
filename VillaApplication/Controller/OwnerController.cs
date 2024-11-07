@@ -36,6 +36,15 @@ namespace OwnerApplication.Controller
         [HttpPost]
         public ActionResult<OwnerDTO> CreateOwner([FromBody] OwnerBO bo)
         {
+            if (!ModelState.IsValid)
+            {
+                var messages = ModelState
+                  .SelectMany(modelState => modelState.Value.Errors)
+                  .Select(err => err.ErrorMessage)
+                  .ToList();
+
+                return BadRequest(messages);
+            }
             return Ok(service.AddOwner(bo));
         }
 

@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VillaApplication.Database;
 
-
 #nullable disable
 
 namespace VillaApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241104160935_Tables")]
+    [Migration("20241106160403_Tables")]
     partial class Tables
     {
         /// <inheritdoc />
@@ -40,7 +39,7 @@ namespace VillaApplication.Migrations
                     b.Property<DateTime>("EditedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FristName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

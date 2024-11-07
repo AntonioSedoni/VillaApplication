@@ -13,7 +13,7 @@ namespace VillaApplication.Configuration
             builder.HasKey(o => o.Id);
 
             builder.Property(o => o.Id).ValueGeneratedOnAdd();
-            builder.Property(o => o.FristName).IsRequired();
+            builder.Property(o => o.FirstName).IsRequired();
             builder.Property(o => o.LastName).IsRequired();
             builder.Property(o => o.CreatedDate).IsRequired();
             builder.Property(o => o.EditedDate).IsRequired();

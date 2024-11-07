@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using VillaApplication.Database;
+﻿using VillaApplication.Database;
 using VillaApplication.Mapper;
 using VillaApplication.Model.Bo;
 using VillaApplication.Model.Data;
@@ -56,7 +55,7 @@ namespace VillaApplication.Service.Impl
             }
             else
             {
-                return new OwnerDTO() { Id = e.Id, FristName = e.FristName, LastName = e.LastName };
+                return new OwnerDTO() { Id = e.Id, FirstName = e.FirstName, LastName = e.LastName };
             }
         }
 

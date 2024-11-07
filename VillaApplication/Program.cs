@@ -1,8 +1,13 @@
 
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using System.ComponentModel.DataAnnotations;
 using VillaApplication.Database;
+using VillaApplication.Model.Validator;
 using VillaApplication.Service;
 using VillaApplication.Service.Impl;
 
@@ -22,6 +27,12 @@ namespace VillaApplication
                 .CreateLogger();
 
             builder.Host.UseSerilog();
+
+            //Fluent Validator
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddFluentValidationClientsideAdapters();
+            builder.Services.AddValidatorsFromAssemblyContaining<OwnerValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<VillaValidator>();
 
             //Add SQL Server
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
