@@ -17,19 +17,14 @@ namespace VillaApplication.Service.Impl
             return typeof(Villa).Name;
         }
 
-
         public VillaDTO? AddVilla(VillaBO bo)
         {
-            if (bo == null)
-            {
-                logger.LogError("Error to create Villa. The body is empty.");
-                return null;
-            }
 
             Owner? owner = OwnerService.GetEntityById(bo.OwnerId);
 
             if (owner == null)
             {
+                logger.LogError("Error to create Villa. Owner with id: {Id} not found.", bo.OwnerId);
                 return null;
             }
 
@@ -65,15 +60,7 @@ namespace VillaApplication.Service.Impl
 
         public bool Delete(int id)
         {
-            Villa? villa = base.GetById(id);
-
-            if (villa == null)
-            {
-                logger.LogError("Error to delete Villa with id: {Id}.", id);
-                return false;
-            }
-
-            bool isDeleted = Delete(villa);
+            bool isDeleted = Delete(id);
 
             if (isDeleted)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VillaApplication.Model.Bo;
+using VillaApplication.Model.Data;
 using VillaApplication.Model.Dto;
 using VillaApplication.Service;
 
@@ -22,11 +23,18 @@ namespace VillaApplication.Controller
         [HttpGet("{id:int}")]
         public ActionResult<VillaDTO> GetVillas(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ErrorResponse(400, $"Id: {id} not valid."));
+            }
+
             VillaDTO? villaDTO = service.GetById(id);
 
             if (villaDTO == null)
             {
-                return NotFound();
+                logger.LogError("Error to get Villa entity. Villa with id {Id} not found.", id);
+
+                return NotFound(new ErrorResponse(404, $"Villa with id: {id} not found."));
             }
             else
             {
@@ -37,12 +45,26 @@ namespace VillaApplication.Controller
         [HttpPost]
         public ActionResult<VillaDTO> CreateVilla([FromBody] VillaBO bo)
         {
-            return Ok(service.AddVilla(bo));
+            VillaDTO? villaDTO = service.AddVilla(bo);
+
+            if (villaDTO == null)
+            {
+                logger.LogError("Error to create new Villa entity. Owner with id {Id} not found.", bo.OwnerId);
+
+                return NotFound(new ErrorResponse(404, $"Owner with id: {bo.OwnerId} not found."));
+            }
+
+            return Ok(villaDTO);
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult DeleteVilla(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ErrorResponse(400, $"Id: {id} not valid."));
+            }
+
             bool deleted = service.Delete(id);
 
             if (deleted)
@@ -51,7 +73,7 @@ namespace VillaApplication.Controller
             }
             else
             {
-                return BadRequest();
+                return NotFound(new ErrorResponse(404, $"Villa with id: {id} not found."));
             }
         }
 
@@ -61,6 +83,7 @@ namespace VillaApplication.Controller
             if(id == 0 || bo == null)
             {
                 logger.LogError("Error to edit Vila.");
+
                 return BadRequest();
             }
 

@@ -25,7 +25,14 @@ namespace VillaApplication.Mapper.Base
 
         public List<DTO> MapEToDTO(List<E> entities)
         {
-            return mapper.Map<List<DTO>>(entities);
+            List<DTO> result = new List<DTO>();
+
+            if (entities != null && entities.Count != 0)
+            {
+                result = mapper.Map<List<DTO>>(entities);
+            }
+
+            return result;
         }
     }
 }

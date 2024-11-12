@@ -2,6 +2,7 @@
 using VillaApplication.Database;
 using VillaApplication.Mapper.Base;
 using VillaApplication.Model.Base;
+using VillaApplication.Model.Data;
 
 namespace VillaApplication.Service
 {
@@ -21,7 +22,7 @@ namespace VillaApplication.Service
 
         protected DTO Save(BO bo)
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
 
             bo.CreatedDate = now;
             bo.EditedDate = now;
@@ -31,10 +32,26 @@ namespace VillaApplication.Service
 
         protected DTO Save(E entity) 
         {
+            logger.LogInformation("Save entity with payload: {Entity}.", entity.ToString());
+
+            if (entity.CreatedDate == new DateTime())
+            {
+                entity.CreatedDate = DateTime.UtcNow;
+            }
+
+            if (entity.EditedDate == new DateTime())
+            {
+                entity.EditedDate = DateTime.UtcNow;
+            }
+
             EntityEntry<E> entityEntry = db.Add<E>(entity);
             db.SaveChanges();
 
-            return mapperEToDTO.MapEToDTO(entityEntry.Entity);
+            E entitySaved = entityEntry.Entity;
+
+            logger.LogInformation("Saved entity with id: {Id}.", entitySaved.Id);
+
+            return mapperEToDTO.MapEToDTO(entitySaved);
         }
 
         protected E? Update(int id, BO bo)
@@ -73,7 +90,7 @@ namespace VillaApplication.Service
         {
             E? e = db.Find<E>(id);
 
-            logger.LogInformation("Get entity {EntityType} with id: {Id}", GetClass(), id);
+            logger.LogInformation("Get entity {EntityType} with id: {Id}.", GetClass(), id);
 
             if (e == null)
             {
@@ -87,14 +104,27 @@ namespace VillaApplication.Service
             }
         }
 
+        protected bool Delete(int id)
+        {
+            E? entity = GetById(id);
+
+            if (entity == null)
+            {
+                logger.LogError("Error to delete {Entity} with id: {Id}.", GetClass(), id);
+                return false;
+            }
+
+            return Delete(entity);
+        }
+
         protected bool Delete(E entity)
         {
-            logger.LogInformation("Delete entity {EntityType} with id: {Id}", entity.GetType().Name, entity.Id);
+            logger.LogInformation("Delete entity {EntityType} with id: {Id}.", entity.GetType().Name, entity.Id);
 
             E entityEntry = db.Remove<E>(entity).Entity;
             db.SaveChanges();
 
-            logger.LogInformation("Deleted entity {EntityType} with id: {Id}", entity.GetType().Name, entity.Id);
+            logger.LogInformation("Deleted entity {EntityType} with id: {Id}.", entity.GetType().Name, entity.Id);
 
             return entityEntry != null;
         }

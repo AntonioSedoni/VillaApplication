@@ -7,6 +7,9 @@ namespace VillaApplication.Model.Validator
     {
         public VillaValidator()
         {
+            RuleFor(v => v.Id)
+                .Empty();
+
             RuleFor(v => v.OwnerId)
                 .NotEmpty();
 

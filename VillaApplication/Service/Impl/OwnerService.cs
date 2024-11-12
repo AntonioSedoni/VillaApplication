@@ -32,17 +32,30 @@ namespace VillaApplication.Service.Impl
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            bool isDeleted = base.Delete(id);
+
+            if (isDeleted)
+            {
+                logger.LogInformation("The entity {Entity} with id: {Id} is deleted.", GetClass(), id);
+            }
+            else
+            {
+                logger.LogInformation("the entity {Entity} with id: {Id} didn't delete.", GetClass(), id);
+            }
+
+            return isDeleted;
         }
 
         public OwnerDTO? Edit(int id, OwnerBO bo)
         {
-            throw new NotImplementedException();
+            Owner? owner = Update(id, bo);
+
+            return owner != null ? mapperEToDTO.MapEToDTO(owner) : null;
         }
 
         public List<OwnerDTO> GetAllEntities()
         {
-            throw new NotImplementedException();
+            return mapperEToDTO.MapEToDTO(db.Owners.ToList());
         }
 
         public new OwnerDTO? GetById(int id)
@@ -55,7 +68,7 @@ namespace VillaApplication.Service.Impl
             }
             else
             {
-                return new OwnerDTO() { Id = e.Id, FirstName = e.FirstName, LastName = e.LastName };
+                return mapperEToDTO.MapEToDTO(e);
             }
         }
 
